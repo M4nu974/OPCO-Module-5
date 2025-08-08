@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  # Service pour le backend (API FastAPI)
+  backend:
+    build:
+      context: ./backend # Indique où trouver le Dockerfile et le code
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001" # Mappe le port 8000 du conteneur au port 8000 de votre machine
+    container_name: backend
+
+  # Service pour le frontend (Application Streamlit)
+  frontend:
+    build:
+      context: ./frontend # Indique où trouver le Dockerfile et le code
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501" # Mappe le port 8501 du conteneur au port 8501 de votre machine
+    container_name: frontend
+    depends_on:
+      - backend # S'assure que le backend est démarré avant le frontend
+

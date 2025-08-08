@@ -1,0 +1,36 @@
+name: CI - Test et Build
+
+on:
+  push:
+    branches: [ "master" ]
+  # Permet de lancer le workflow manuellement depuis l'interface de GitHub
+  workflow_dispatch:
+
+# Définit les jobs (tâches) à exécuter
+jobs:
+  # Nom du job
+  test-and-build:
+    # Spécifie que le job doit s'exécuter sur une machine virtuelle Ubuntu à jour
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Mise en place de Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+
+      - name: Installation des dépendances du backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-mock
+
+      - name: Lancement des tests unitaires (pytest)
+        run: pytest
+
+      - name: Build des images Docker via Docker Compose
+        run: docker compose build
+
